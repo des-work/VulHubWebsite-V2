@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VulHub Leaderboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['Fira Code', 'monospace'],
+              cyber: ['Orbitron', 'sans-serif'],
+            },
+            colors: {
+              vulhub: {
+                black: '#0a0a0a',
+                dark: '#111111',
+                card: '#1a1a1a',
+                border: '#333333',
+                primary: '#00b5e2', // CSUSB Coyote Blue (Cyan bright)
+                secondary: '#005eb8', // CSUSB Official Blue
+                text: '#e0e0e0',
+                muted: '#888888'
+              }
+            },
+            animation: {
+              'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'glow': 'glow 2s ease-in-out infinite alternate',
+              'matrix-fade': 'matrixFade 0.5s ease-out forwards',
+              'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+              'scanline': 'scanline 8s linear infinite',
+              'turn-on': 'turnOn 0.6s ease-out forwards',
+              'scan-vertical': 'scanVertical 3s linear infinite',
+              'glitch-skew': 'glitchSkew 1s infinite linear alternate-reverse',
+              'hologram': 'hologram 2s infinite',
+              'bounce-sm': 'bounceSm 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+              'shine': 'shine 1.5s infinite',
+            },
+            keyframes: {
+              glow: {
+                '0%': { boxShadow: '0 0 5px #00b5e2' },
+                '100%': { boxShadow: '0 0 20px #00b5e2, 0 0 10px #00b5e2' },
+              },
+              matrixFade: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              shake: {
+                '0%, 100%': { transform: 'translateX(0)' },
+                '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-2px)' },
+                '20%, 40%, 60%, 80%': { transform: 'translateX(2px)' },
+              },
+              scanline: {
+                '0%': { backgroundPosition: '0 0' },
+                '100%': { backgroundPosition: '0 100%' },
+              },
+              turnOn: {
+                '0%': { transform: 'scale(1, 0.002)', opacity: 0 },
+                '35%': { transform: 'scale(1, 0.002)', opacity: 1 },
+                '100%': { transform: 'scale(1, 1)', opacity: 1 },
+              },
+              scanVertical: {
+                '0%': { top: '-10%' },
+                '100%': { top: '110%' },
+              },
+              glitchSkew: {
+                '0%': { transform: 'skew(0deg)' },
+                '20%': { transform: 'skew(-2deg)' },
+                '40%': { transform: 'skew(2deg)' },
+                '60%': { transform: 'skew(0deg)' },
+                '80%': { transform: 'skew(1deg)' },
+                '100%': { transform: 'skew(0deg)' },
+              },
+              hologram: {
+                '0%, 100%': { opacity: 1 },
+                '50%': { opacity: 0.8 },
+                '52%': { opacity: 0.5 },
+                '54%': { opacity: 0.8 },
+              },
+              bounceSm: {
+                '0%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.2)' },
+                '100%': { transform: 'scale(1)' },
+              },
+              shine: {
+                '0%': { left: '-100%' },
+                '100%': { left: '200%' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Custom scrollbar for terminal */
+      .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+      }
+      .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+      }
+      body {
+        background-color: #0a0a0a;
+        color: #e0e0e0;
+      }
+
+      /* CRT Effects */
+      .crt-overlay {
+        background: linear-gradient(
+          rgba(18, 16, 16, 0) 50%, 
+          rgba(0, 0, 0, 0.25) 50%
+        ), linear-gradient(
+          90deg, 
+          rgba(255, 0, 0, 0.06), 
+          rgba(0, 255, 0, 0.02), 
+          rgba(0, 0, 255, 0.06)
+        );
+        background-size: 100% 2px, 3px 100%;
+        pointer-events: none;
+      }
+
+      .text-glow {
+        text-shadow: 0 0 5px currentColor;
+      }
+      
+      /* Updated to Blue for Coyote Theme */
+      .text-glow-green {
+        text-shadow: 0 0 5px #00b5e2, 0 0 10px rgba(0, 181, 226, 0.5);
+      }
+      
+      .text-glow-amber {
+        text-shadow: 0 0 5px #f59e0b, 0 0 10px rgba(245, 158, 11, 0.5);
+      }
+
+      .text-glow-blue {
+        text-shadow: 0 0 5px #06b6d4, 0 0 10px rgba(6, 182, 212, 0.5);
+      }
+
+      .text-glow-silver {
+        text-shadow: 0 0 5px #e0e0e0, 0 0 10px rgba(224, 224, 224, 0.5);
+      }
+
+      @keyframes cursor-blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      
+      .cursor-blink {
+        animation: cursor-blink 1s step-end infinite;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "recharts": "https://aistudiocdn.com/recharts@^3.4.1"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
